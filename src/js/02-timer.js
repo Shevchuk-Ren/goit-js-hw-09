@@ -39,16 +39,17 @@ function onInput(event) {
     } else if(new Date(inputHours.value).getTime() <= Date.now()) {
         // console.log('fff')
         timerBtn.disabled = true;
-        return Swal.fire({
-            title: 'Please choose a date in the future',
-            showClass: {
-                popup: 'animate__animated animate__fadeInDown'
-            },
-            hideClass: {
-                popup: 'animate__animated animate__fadeOutUp'
-            }
+        // return Swal.fire({
+        //     title: 'Please choose a date in the future',
+        //     showClass: {
+        //         popup: 'animate__animated animate__fadeInDown'
+        //     },
+        //     hideClass: {
+        //         popup: 'animate__animated animate__fadeOutUp'
+        //     }
            
-        });
+        // });
+        return Swal.fire('Please choose a date in the future')
     }
 
 }
