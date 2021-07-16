@@ -4,9 +4,6 @@ const startBtn = document.querySelector('[data-start]');
 const stopBtn = document.querySelector('[data-stop]');
 const body = document.querySelector('body');
 
-console.log(body)
-console.log(startBtn)
-console.log(stopBtn)
 
 startBtn.addEventListener('click', createRandomColorForBody);
 
