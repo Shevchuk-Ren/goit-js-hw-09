@@ -9,115 +9,83 @@ const timerMin = document.querySelector('[data-minutes]');
 const timerSec = document.querySelector('[data-seconds]');
 
 
-
-
-
-timerBtn.addEventListener('click', startTimerForEnd);
-inputHours.addEventListener('input', onInput)
-
 timerBtn.disabled = true;
 
-// if (Date.now > new Date(inputHours.value).getTime()) {
-//     console.log(new Date(inputHours.value).getTime())
-//     timerBtn.disabled = false;
-//     console.log(timerBtn)
-//     return alert("Please choose a date in the future");
-// }
-// timerBtn.disabled = true;
-console.dir(inputHours)
-function onInput(event) {
 
-    // let x = event.currentTarget;
-    // return x;
-    // console.log(`input`, new Date(inputHours.value).getTime())
-    //  console.log(`date`, Date.now())
-    // console.log(new Date(inputHours.value).getTime())
+class Timer {
+    constructor({onTick}) {
+        this.intervalId = null;
+        this.isActive = false;
+        this.onTick = onTick;
+    }
+
+    start() {
+        
+        if (this.isActive) {
+            const newDataEnd = new Date(inputHours.value).getTime();
+                return;
+        }
+        const currentDate = Date.now();
+        const createDataEnd = new Date(inputHours.value).getTime();
+        this.isActive = true;
+        let deltaDate = createDataEnd - currentDate;
+        
+        this.intervalId = setInterval(() => {
+            const caunterTime = deltaDate -= 1000;
+            const updateClock = convertMs(caunterTime);
+            this.onTick(updateClock)
+            timer.stop();
+        }, 1000);
+    }
+  
+    //останавливает таймер, когда он доходит до своего конца, блокирует кнопку
+    stop() {
+       
+        if (timerDays.textContent == '00' && timerHours.textContent == '00' && timerMin.textContent == '00' && timerSec.textContent == '00') {
+            clearInterval(this.intervalId);
+            this.isActive = false;
+            timerBtn.disabled = true;
+            
+        }
+    }
+}
+
+const timer = new Timer({
+    onTick: updateClockFace
+});
+
+
+//cлушатель на кнопке и на инпуте
+timerBtn.addEventListener('click', () => {
+    timer.start();
+});
+inputHours.addEventListener('input', onInput);
+
+
+//обновляет время таймера
+function updateClockFace({ days, hours, minutes, seconds }) {
+    
+    console.log(`${days}: ${hours}: ${minutes}: ${seconds}`);
+     
+           timerDays.textContent = `${days}`;
+           timerHours.textContent = `${hours}`;
+           timerMin.textContent = `${minutes}`;
+           timerSec.textContent = `${seconds}`;
+    
+};
+
+// блокирует кнопку, если дата меньше сегодняшней даты, разблокирует если больше или равно
+function onInput() {
+
     if (new Date(inputHours.value).getTime() >= Date.now()) {
         timerBtn.disabled = false;
-        // console.log('hhh')
-
+      
     } else if(new Date(inputHours.value).getTime() <= Date.now()) {
-        // console.log('fff')
+       
         timerBtn.disabled = true;
-        // return Swal.fire({
-        //     title: 'Please choose a date in the future',
-        //     showClass: {
-        //         popup: 'animate__animated animate__fadeInDown'
-        //     },
-        //     hideClass: {
-        //         popup: 'animate__animated animate__fadeOutUp'
-        //     }
-           
-        // });
         return Swal.fire('Please choose a date in the future')
     }
 
-}
-
-
-function startTimerForEnd() {
-    const currentTime = Date.now();
-    const createDataEnd = new Date(inputHours.value).getTime();
-   
-   
-    inputHours.value;
-    console.dir(inputHours.value)
-   
-    
-    console.log(`ss`, timerBtn.isActive)
-  
-    let a = createDataEnd - currentTime;
-
-    
-
-    const intervalId = setInterval(() => {
-     
-
-        console.log(`djn`, a)
-
-        const caunterTime = a -= 1000;
-        console.log(caunterTime)
-
-        const { days, hours, minutes, seconds } = convertMs(caunterTime);
-        console.log(`${days}: ${hours}: ${minutes}: ${seconds}`);
-        timerDays.textContent = `${days}`;
-        timerHours.textContent = `${hours}`;
-        timerMin.textContent = `${minutes}`;
-        timerSec.textContent = `${seconds}`;
-        console.log(timerDays)
-
-        if (timerDays.textContent == '00' && timerHours.textContent == '00' && timerMin.textContent == '00' && timerSec.textContent == '00') {
-            clearInterval(intervalId);
-        }
-    }, 1000);
-    console.log(timerDays)
-
-
-}
-const timer = {
-    start() {
-
-        const startTime = Date.now();
-
-    },
-}
-timer.start();
-
-/*
-  * - Принимает время в миллисекундах
-  * - Высчитывает сколько в них вмещается часов/минут/секунд
-  * - Возвращает обьект со свойствами hours, mins, secs
-  * - Адская копипаста со стека 💩
-  */
-function getTimeComponents(time) {
-    console.log(time)
-    const hours =
-        pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)))
-        ;
-    const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-    const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
-
-    return { hours, mins, secs };
 }
 
 /*
