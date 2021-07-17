@@ -32,7 +32,7 @@ class Timer {
         
         this.intervalId = setInterval(() => {
             const caunterTime = deltaDate -= 1000;
-            const updateClock = convertMs(caunterTime);
+            const updateClock = this.convertMs(caunterTime);
             this.onTick(updateClock)
             timer.stop();
         }, 1000);
@@ -48,6 +48,34 @@ class Timer {
             
         }
     }
+
+    // ms - разница между конечной и текущей датой в миллисекундаx
+    // переводит общую сумму милисекунд: дни, часы, минуты, секунды
+ convertMs(ms) {
+    // Number of milliseconds per unit of time
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+
+    // Remaining days
+    const days = this.pad(Math.floor(ms / day));
+    // Remaining hours
+    const hours = this.pad(Math.floor((ms % day) / hour));
+    // Remaining minutes
+    const minutes = this.pad(Math.floor(((ms % day) % hour) / minute));
+    // Remaining seconds
+    const seconds = this.pad(Math.floor((((ms % day) % hour) % minute) / second));
+
+    return { days, hours, minutes, seconds };
+    };
+    
+/*
+   * Принимает число, приводит к строке и добавляет в начало 0 если число меньше 2-х знаков
+   */
+  pad(value) {
+    return String(value).padStart(2, '0');
+};
 }
 
 const timer = new Timer({
@@ -86,33 +114,33 @@ function onInput() {
         return Swal.fire('Please choose a date in the future')
     }
 
-}
+};
 
-/*
-   * Принимает число, приводит к строке и добавляет в начало 0 если число меньше 2-х знаков
-   */
-function pad(value) {
-    return String(value).padStart(2, '0');
-}
+// /*
+//    * Принимает число, приводит к строке и добавляет в начало 0 если число меньше 2-х знаков
+//    */
+// function pad(value) {
+//     return String(value).padStart(2, '0');
+// };
 
 
-// ms - разница между конечной и текущей датой в миллисекунда
-function convertMs(ms) {
-    // Number of milliseconds per unit of time
-    const second = 1000;
-    const minute = second * 60;
-    const hour = minute * 60;
-    const day = hour * 24;
+// // ms - разница между конечной и текущей датой в миллисекунда
+//  convertMs(ms) {
+//     // Number of milliseconds per unit of time
+//     const second = 1000;
+//     const minute = second * 60;
+//     const hour = minute * 60;
+//     const day = hour * 24;
 
-    // Remaining days
-    const days = pad(Math.floor(ms / day));
-    // Remaining hours
-    const hours = pad(Math.floor((ms % day) / hour));
-    // Remaining minutes
-    const minutes = pad(Math.floor(((ms % day) % hour) / minute));
-    // Remaining seconds
-    const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
+//     // Remaining days
+//     const days = pad(Math.floor(ms / day));
+//     // Remaining hours
+//     const hours = pad(Math.floor((ms % day) / hour));
+//     // Remaining minutes
+//     const minutes = pad(Math.floor(((ms % day) % hour) / minute));
+//     // Remaining seconds
+//     const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
 
-    return { days, hours, minutes, seconds };
-}
+//     return { days, hours, minutes, seconds };
+// };
 
